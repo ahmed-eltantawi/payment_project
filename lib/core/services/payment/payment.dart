@@ -5,4 +5,16 @@ abstract class Payment {
       {required double amount, required String currency});
 
   Future<String> _getAuthenticationToken();
+
+  Future<int> _getOrderId({
+    required String authenticationToken,
+    required String amount,
+    required String currency,
+  });
+
+  Future<String> _getPaymentKey(
+      {required String authenticationToken,
+      required String orderId,
+      required String amount,
+      required String currency});
 }

@@ -5,6 +5,7 @@ abstract class EndPoint {
 
 // ApiKeys: the keys of the api
 abstract class ApiKey {
+  static const String token = "token";
   static const String apiKey = "api_key";
   static const String statusCode = "statusCode";
   static const String errorMessage = "message";
