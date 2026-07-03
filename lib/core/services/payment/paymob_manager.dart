@@ -1,36 +1,44 @@
+import 'package:dartz/dartz.dart';
 import 'package:payment_project/core/networking/api_end_points.dart';
 import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/services_locator.dart';
 import 'package:payment_project/core/utils/constants.dart';
 
+import '../../errors/error_model.dart';
+
 part 'payment.dart';
 
 class PaymobManager extends Payment {
   @override
-  Future<String> getPaymentKey(
+  Future<Either<String, String>> getPaymentKey(
       {required double amount, required String currency}) async {
-    // -- we have to get three things from the api --
+    try {
+      // -- we have to get three things from the api --
 
-    //* -- 1- Authentication Token --
-    String authenticationToken = await _getAuthenticationToken();
+      //* -- 1- Authentication Token --
+      String authenticationToken = await _getAuthenticationToken();
 
-    //* -- 2- Order Id --
-    int orderId = await _getOrderId(
-        amount: (amount * 100)
-            .toString(), // we multiply by 100 to get amount in cents
-        currency: currency,
-        authenticationToken: authenticationToken);
+      //* -- 2- Order Id --
+      int orderId = await _getOrderId(
+          amount: (amount * 100)
+              .toString(), // we multiply by 100 to get amount in cents
+          currency: currency,
+          authenticationToken: authenticationToken);
 
-    //* -- 3- Payment Key --
-    String paymentKey = await _getPaymentKey(
-        authenticationToken: authenticationToken,
-        orderId: orderId.toString(),
-        amount: (amount * 100)
-            .toString(), // we multiply by 100 to get amount in cents,
-        currency: currency);
+      //* -- 3- Payment Key --
+      String paymentKey = await _getPaymentKey(
+          authenticationToken: authenticationToken,
+          orderId: orderId.toString(),
+          amount: (amount * 100)
+              .toString(), // we multiply by 100 to get amount in cents,
+          currency: currency);
 
-    //* Then we return the payment key
-    return paymentKey;
+      //* Then we return the payment key
+      return right(paymentKey);
+    } catch (e) {
+      return left(
+          "Something went wrong in paymob manager, please try again later\n $e");
+    }
   }
 
   @override
