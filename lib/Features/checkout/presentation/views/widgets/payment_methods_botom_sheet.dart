@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
@@ -23,11 +25,24 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
             const SizedBox(height: 16),
             const PaymentMethodsListView(),
             const SizedBox(height: 32),
-            CustomButton(
-                text: 'Continue',
-                onTap: () {
-                  _pay(context: context);
-                }),
+            BlocBuilder<PaymentCubit, PaymentState>(
+              builder: (context, state) {
+                var customButton = CustomButton(
+                    text: 'Continue',
+                    onTap: () {
+                      context.read<PaymentCubit>().pay(context);
+                    });
+                log(state.toString());
+                if (state is PaymentLoading) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (state is PaymentError) {
+                  showSnackBar(context, state.error);
+                  return customButton;
+                } else {
+                  return customButton;
+                }
+              },
+            ),
           ],
         ),
       ),

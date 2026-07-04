@@ -32,8 +32,9 @@ class _PaymentMethodsListViewState extends State<PaymentMethodsListView> {
             child: GestureDetector(
               onTap: () {
                 context.read<PaymentCubit>().paymentGetawayIndex = index;
-
-                setState(() {});
+                setState(() {
+                  activeIndex = index;
+                });
               },
               child: PaymentMethodItem(
                 isActive: activeIndex == index,

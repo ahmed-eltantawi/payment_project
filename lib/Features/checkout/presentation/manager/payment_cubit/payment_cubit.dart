@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_repo_impl.dart';
@@ -12,6 +14,7 @@ class PaymentCubit extends Cubit<PaymentState> {
   int paymentGetawayIndex = PaymentGetaway.paymob.index;
 
   Future<void> pay(context) async {
+    log("paymentLoading");
     emit(PaymentLoading());
     try {
       if (paymentGetawayIndex == PaymentGetaway.paymob.index) {
@@ -21,8 +24,10 @@ class PaymentCubit extends Cubit<PaymentState> {
       } else if (paymentGetawayIndex == PaymentGetaway.stripe.index) {
         // pay with stripe
       }
+      log("paymentSuccess");
       emit(PaymentSuccess());
     } on Exception catch (e) {
+      log("paymentError");
       emit(PaymentError(error: e.toString()));
     }
   }
