@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:payment_project/Features/checkout/presentation/views/thank_you_view.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/custom_credit_card.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
@@ -38,7 +36,6 @@ class _PaymentDetailsViewBodyState extends State<PaymentDetailsViewBody> {
                 onTap: () {
                   if (formKey.currentState!.validate()) {
                     formKey.currentState!.save();
-                    log('payment');
                   } else {
                     Navigator.of(context).push(
                       MaterialPageRoute(

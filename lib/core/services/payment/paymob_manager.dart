@@ -4,8 +4,6 @@ import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/services_locator.dart';
 import 'package:payment_project/core/utils/constants.dart';
 
-import '../../errors/error_model.dart';
-
 part 'payment.dart';
 
 class PaymobManager extends Payment {
@@ -17,14 +15,12 @@ class PaymobManager extends Payment {
 
       //* -- 1- Authentication Token --
       String authenticationToken = await _getAuthenticationToken();
-
       //* -- 2- Order Id --
       int orderId = await _getOrderId(
           amount: (amount * 100)
               .toString(), // we multiply by 100 to get amount in cents
           currency: currency,
           authenticationToken: authenticationToken);
-
       //* -- 3- Payment Key --
       String paymentKey = await _getPaymentKey(
           authenticationToken: authenticationToken,
@@ -45,7 +41,8 @@ class PaymobManager extends Payment {
   Future<String> _getAuthenticationToken() async {
     final response = await getIt
         .get<DioConsumer>()
-        .post("auth/token", data: {ApiKey.apiKey: Constants.apiKey});
+        .post("auth/tokens", data: {ApiKey.apiKey: Constants.apiKey});
+
     return response[ApiKey.token];
   }
 
@@ -91,7 +88,7 @@ class PaymobManager extends Payment {
         "first_name": "Clifford",
         "last_name": "Nicolas",
         "email": "claudette09@exa.com",
-        "phone_number": "+86(8)9135210487",
+        "phone_number": "+201020101740",
 
         //Can Set "NA"
         "apartment": "NA",

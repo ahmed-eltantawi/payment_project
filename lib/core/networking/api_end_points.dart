@@ -1,6 +1,6 @@
 // EndPoints: the endpoints of the api
 abstract class EndPoint {
-  static const String baseUrl = "https://accept.paymob.com/api";
+  static const String baseUrl = "https://accept.paymob.com/api/";
 }
 
 // ApiKeys: the keys of the api
