@@ -1,3 +1,5 @@
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_method_item.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +29,8 @@ class _PaymentMethodsListViewState extends State<PaymentMethodsListView> {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             child: GestureDetector(
               onTap: () {
-                activeIndex = index;
+                context.read<PaymentCubit>().paymentGetawayIndex = index;
+
                 setState(() {});
               },
               child: PaymentMethodItem(

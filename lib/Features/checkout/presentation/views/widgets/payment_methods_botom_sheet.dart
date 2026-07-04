@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
 import 'package:payment_project/core/services/payment/paymob_manager.dart';
 import 'package:payment_project/core/widgets/custom_button.dart';
@@ -13,18 +15,21 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SizedBox(height: 16),
-          const PaymentMethodsListView(),
-          const SizedBox(height: 32),
-          CustomButton(
-              text: 'Continue',
-              onTap: () {
-                _pay(context: context);
-              }),
-        ],
+      child: BlocProvider(
+        create: (context) => PaymentCubit(),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 16),
+            const PaymentMethodsListView(),
+            const SizedBox(height: 32),
+            CustomButton(
+                text: 'Continue',
+                onTap: () {
+                  _pay(context: context);
+                }),
+          ],
+        ),
       ),
     );
   }
