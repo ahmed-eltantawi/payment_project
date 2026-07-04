@@ -1,9 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_repo_impl.dart';
-import 'package:payment_project/core/functions/snak_bar.dart';
-import 'package:payment_project/core/services/payment/paymob_manager.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
 
 part 'payment_state.dart';
 
@@ -29,5 +27,3 @@ class PaymentCubit extends Cubit<PaymentState> {
     }
   }
 }
-
-enum PaymentGetaway { paymob, paypal, stripe }

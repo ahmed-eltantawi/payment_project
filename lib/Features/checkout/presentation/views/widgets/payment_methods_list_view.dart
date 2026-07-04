@@ -3,6 +3,8 @@ import 'package:payment_project/Features/checkout/presentation/manager/payment_c
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_method_item.dart';
 import 'package:flutter/material.dart';
 
+enum PaymentGetaway { paymob, paypal, stripe }
+
 class PaymentMethodsListView extends StatefulWidget {
   const PaymentMethodsListView({super.key});
 
