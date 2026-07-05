@@ -30,7 +30,9 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
                 var customButton = CustomButton(
                     text: 'Continue',
                     onTap: () {
-                      context.read<PaymentCubit>().pay(context);
+                      context
+                          .read<PaymentCubit>()
+                          .pay(context: context, amount: 1000, currency: "EGP");
                     });
                 log(state.toString());
                 if (state is PaymentLoading) {

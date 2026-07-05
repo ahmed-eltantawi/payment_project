@@ -13,13 +13,18 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   int paymentGetawayIndex = PaymentGetaway.paymob.index;
 
-  Future<void> pay(context) async {
+  Future<void> pay(
+      {required context,
+      required double amount,
+      required String currency}) async {
     log("paymentLoading");
     emit(PaymentLoading());
     try {
       if (paymentGetawayIndex == PaymentGetaway.paymob.index) {
-        await paymentRepoImpl.payWithPaymob(context: context);
+        await paymentRepoImpl.payWithPaymob(
+            context: context, amount: amount, currency: currency);
       } else if (paymentGetawayIndex == PaymentGetaway.paypal.index) {
+        await paymentRepoImpl.payWithPaypal(context: context);
         // pay with paypal
       } else if (paymentGetawayIndex == PaymentGetaway.stripe.index) {
         // pay with stripe
