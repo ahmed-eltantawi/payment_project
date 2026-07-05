@@ -14,15 +14,13 @@ class PaymentCubit extends Cubit<PaymentState> {
       required double amount,
       required String currency}) async {
     emit(PaymentLoading());
-    try {
-      await paymentGetaways[paymentGetawayIndex].makePayment(
-        context: context,
-        amount: amount,
-        currency: currency,
-      );
-      emit(PaymentSuccess());
-    } on Exception catch (e) {
-      emit(PaymentError(error: e.toString()));
-    }
+
+    final result = await paymentGetaways[paymentGetawayIndex].makePayment(
+      context: context,
+      amount: amount,
+      currency: currency,
+    );
+    result.fold((failure) => emit(PaymentError(error: failure)),
+        (r) => emit(PaymentSuccess()));
   }
 }

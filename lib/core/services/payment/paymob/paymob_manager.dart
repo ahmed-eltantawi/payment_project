@@ -110,16 +110,22 @@ class PaymobManager extends PaymobManagerInterface {
   }
 
   @override
-  Future<void> makePayment(
+  Future<Either<String, void>> makePayment(
       {required context,
       required double amount,
       required String currency}) async {
-    final paymentKey = await PaymobManager()
-        ._getPaymentToken(amount: amount, currency: currency);
-    paymentKey.fold((failure) => showSnackBar(context, failure),
-        (paymentKey) async {
-      await launchUrl(Uri.parse(
-          "https://accept.paymob.com/api/acceptance/iframes/1057330?payment_token=$paymentKey"));
-    });
+    try {
+      final paymentKey = await PaymobManager()
+          ._getPaymentToken(amount: amount, currency: currency);
+      paymentKey.fold((failure) => showSnackBar(context, failure),
+          (paymentKey) async {
+        await launchUrl(Uri.parse(
+            "https://accept.paymob.com/api/acceptance/iframes/1057330?payment_token=$paymentKey"));
+      });
+
+      return right(null);
+    } on Exception catch (e) {
+      return left(e.toString());
+    }
   }
 }

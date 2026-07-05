@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dartz/dartz.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/payment/payment_interface.dart';
@@ -47,18 +48,21 @@ class StripeManager extends StripeManagerInterface {
   }
 
   @override
-  Future<void> makePayment({
+  Future<Either<String, void>> makePayment({
     required context,
     required double amount,
     required String currency,
   }) async {
-    log("========================make payment starts");
-    final paymentIntentModel =
-        await _createPaymentIntent(amount: amount, currency: currency);
-    await _initPaymentSheet(
-        paymentIntentClientSecret: paymentIntentModel.clientSecret!,
-        merchantDisplayName: "Ahmed");
-    await _displayPaymentSheet();
-    log("======================make payment ends");
+    try {
+      final paymentIntentModel =
+          await _createPaymentIntent(amount: amount, currency: currency);
+      await _initPaymentSheet(
+          paymentIntentClientSecret: paymentIntentModel.clientSecret!,
+          merchantDisplayName: "Ahmed");
+      await _displayPaymentSheet();
+      return right(null);
+    } on Exception catch (e) {
+      return left(e.toString());
+    }
   }
 }

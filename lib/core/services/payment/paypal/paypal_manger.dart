@@ -1,8 +1,9 @@
+import 'package:dartz/dartz.dart';
 import 'package:payment_project/core/services/payment/payment_interface.dart';
 
 class PayPalManger extends PaymentInterface {
   @override
-  Future<void> makePayment(
+  Future<Either<String, void>> makePayment(
       {required context, required double amount, required String currency}) {
     // TODO: implement makePayment
     throw UnimplementedError();
