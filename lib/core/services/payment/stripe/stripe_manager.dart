@@ -53,12 +53,12 @@ class StripeManager extends StripeManagerInterface {
     required String currency,
   }) async {
     log("========================make payment starts");
-    final paymentIntentModel = await StripeManager()
-        ._createPaymentIntent(amount: amount, currency: currency);
-    await StripeManager()._initPaymentSheet(
+    final paymentIntentModel =
+        await _createPaymentIntent(amount: amount, currency: currency);
+    await _initPaymentSheet(
         paymentIntentClientSecret: paymentIntentModel.clientSecret!,
         merchantDisplayName: "Ahmed");
-    await StripeManager()._displayPaymentSheet();
+    await _displayPaymentSheet();
     log("======================make payment ends");
   }
 }
