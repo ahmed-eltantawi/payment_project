@@ -1,13 +1,15 @@
 class Metadata {
-  Metadata();
+  final Map<String, dynamic> data;
+
+  Metadata({required this.data});
 
   factory Metadata.fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError('Metadata.fromJson($json) is not implemented');
+    return Metadata(
+      data: Map<String, dynamic>.from(json),
+    );
   }
 
   Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    return data;
   }
 }

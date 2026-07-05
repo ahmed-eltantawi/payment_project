@@ -1,13 +1,17 @@
 class Tip {
-  Tip();
+  final List<int>? amount;
+
+  Tip({this.amount});
 
   factory Tip.fromJson(Map<String, dynamic> json) {
-    // TODO: implement fromJson
-    throw UnimplementedError('Tip.fromJson($json) is not implemented');
+    return Tip(
+      amount: json['amount'] != null ? List<int>.from(json['amount']) : null,
+    );
   }
 
   Map<String, dynamic> toJson() {
-    // TODO: implement toJson
-    throw UnimplementedError();
+    return {
+      'amount': amount,
+    };
   }
 }
