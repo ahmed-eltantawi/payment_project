@@ -1,12 +1,12 @@
 part of "stripe_manager.dart";
 
-abstract class StripeManagerInterface {
-  Future<PaymentIntentModel> createPaymentIntent(
+abstract class StripeManagerInterface extends PaymentInterface {
+  Future<PaymentIntentModel> _createPaymentIntent(
       {required double amount, required String currency});
 
-  Future<void> initPaymentSheet(
+  Future<void> _initPaymentSheet(
       {required String paymentIntentClientSecret,
       required String merchantDisplayName});
 
-  Future<void> displayPaymentSheet();
+  Future<void> _displayPaymentSheet();
 }

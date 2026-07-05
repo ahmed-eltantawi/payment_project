@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:payment_project/core/functions/snak_bar.dart';
 import 'package:payment_project/core/networking/api_end_points.dart';
 import 'package:payment_project/core/networking/dio_consumer.dart';
+import 'package:payment_project/core/services/payment/payment_interface.dart';
 import 'package:payment_project/core/services/services_locator.dart';
 import 'package:payment_project/core/utils/constants.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -108,7 +109,8 @@ class PaymobManager extends PaymobManagerInterface {
     return response[ApiKey.token];
   }
 
-  static Future<void> makePayment(
+  @override
+  Future<void> makePayment(
       {required context,
       required double amount,
       required String currency}) async {

@@ -2,8 +2,16 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_method_item.dart';
 import 'package:flutter/material.dart';
+import 'package:payment_project/core/services/payment/payment_interface.dart';
+import 'package:payment_project/core/services/payment/paymob/paymob_manager.dart';
+import 'package:payment_project/core/services/payment/paypal/paypal_manger.dart';
+import 'package:payment_project/core/services/payment/stripe/stripe_manager.dart';
 
-enum PaymentGetaway { paymob, paypal, stripe }
+List<PaymentInterface> paymentGetaways = [
+  PaymobManager(),
+  PayPalManger(),
+  StripeManager()
+];
 
 class PaymentMethodsListView extends StatefulWidget {
   const PaymentMethodsListView({super.key});

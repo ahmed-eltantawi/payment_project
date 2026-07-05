@@ -34,7 +34,7 @@ void handleDioExceptions(DioException e) {
       switch (e.response!.statusCode) {
         case 400: // bad request
           throw ServerException(
-            errorModel: SignUpErrorModel.fromJson(e.response!.data),
+            errorModel: ErrorModel.fromJson(e.response!.data),
           );
         case 401: // unauthorized
           throw ServerException(
