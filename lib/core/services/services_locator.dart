@@ -2,6 +2,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:get_it/get_it.dart';
+import 'package:payment_project/core/cache/cache_helper.dart';
 import 'package:payment_project/core/utils/constants.dart';
 
 import '../networking/dio_consumer.dart';
@@ -9,6 +10,7 @@ import '../networking/dio_consumer.dart';
 final getIt = GetIt.instance;
 
 Future<void> setupServiceLocator() async {
+  getIt.registerSingleton<CacheHelper>(CacheHelper());
   Stripe.publishableKey = Constants.stripePublishableKey;
 
   getIt.registerSingleton<Dio>(Dio());
