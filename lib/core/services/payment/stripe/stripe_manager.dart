@@ -16,14 +16,19 @@ part "stripe_manager_interface.dart";
 class StripeManager extends StripeManagerInterface {
   static const String _baseUrl = "https://api.stripe.com/v1/";
   @override
-  Future<PaymentIntentModel> _createPaymentIntent(
-      {required double amount, required String currency}) async {
+  Future<PaymentIntentModel> _createPaymentIntent({
+    required double amount,
+    required String currency,
+  }) async {
     log("create Payment Intent starts");
     final response = await getIt
         .get<DioConsumer>()
         .post("${_baseUrl}payment_intents", data: {
       "amount": (amount * 100).toInt(),
-      "currency": currency
+      "currency": currency,
+      "customer": await getIt
+          .get<CacheHelper>()
+          .getSecureData(key: CacheKeys.customerId),
     }, headers: {
       'Authorization': "Bearer ${Constants.stripeSecretKey}",
       Headers.contentTypeHeader: Headers.formUrlEncodedContentType
@@ -52,6 +57,8 @@ class StripeManager extends StripeManagerInterface {
   }
 
   @override
+
+  /// This is the main function to make payment
   Future<Either<String, void>> makePayment({
     required context,
     required double amount,
