@@ -10,6 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 part 'paymob_manager_interface.dart';
 
 class PaymobManager extends PaymobManagerInterface {
+  static const _baseUrl = "https://accept.paymob.com/api/";
   @override
   Future<Either<String, String>> _getPaymentToken(
       {required double amount, required String currency}) async {
@@ -42,9 +43,9 @@ class PaymobManager extends PaymobManagerInterface {
 
   @override
   Future<String> _getAuthenticationToken() async {
-    final response = await getIt
-        .get<DioConsumer>()
-        .post("auth/tokens", data: {ApiKey.apiKey: Constants.apiKey});
+    final response = await getIt.get<DioConsumer>().post(
+        "${_baseUrl}auth/tokens",
+        data: {ApiKey.apiKey: Constants.apiKey});
 
     return response[ApiKey.token];
   }
@@ -55,7 +56,7 @@ class PaymobManager extends PaymobManagerInterface {
       required String amount,
       required String currency}) async {
     final response = await getIt.get<DioConsumer>().post(
-      "ecommerce/orders",
+      "${_baseUrl}ecommerce/orders",
       data: {
         "auth_token": authenticationToken,
         "amount_cents": amount, // >> String <<
@@ -73,8 +74,9 @@ class PaymobManager extends PaymobManagerInterface {
       required String orderId,
       required String amount,
       required String currency}) async {
-    final response =
-        await getIt.get<DioConsumer>().post("acceptance/payment_keys", data: {
+    final response = await getIt
+        .get<DioConsumer>()
+        .post("${_baseUrl}acceptance/payment_keys", data: {
       // ALL OF THEM ARE REQIERD
       "expiration": 3600,
 
@@ -120,7 +122,7 @@ class PaymobManager extends PaymobManagerInterface {
       paymentKey.fold((failure) => showSnackBar(context, failure),
           (paymentKey) async {
         await launchUrl(Uri.parse(
-            "https://accept.paymob.com/api/acceptance/iframes/1057330?payment_token=$paymentKey"));
+            "${_baseUrl}acceptance/iframes/1057330?payment_token=$paymentKey"));
       });
 
       return right(null);
