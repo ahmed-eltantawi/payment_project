@@ -7,4 +7,6 @@ abstract class StripeManagerInterface {
   Future<void> initPaymentSheet(
       {required String paymentIntentClientSecret,
       required String merchantDisplayName});
+
+  Future<void> displayPaymentSheet();
 }

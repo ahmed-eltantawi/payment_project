@@ -26,4 +26,9 @@ class StripeManager extends StripeManagerInterface {
             paymentIntentClientSecret: paymentIntentClientSecret,
             merchantDisplayName: merchantDisplayName));
   }
+
+  @override
+  Future<void> displayPaymentSheet() async {
+    await Stripe.instance.presentPaymentSheet();
+  }
 }

@@ -2,14 +2,13 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_repo_impl.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
+import 'package:payment_project/core/services/payment/paymob/paymob_manager.dart';
 
 part 'payment_state.dart';
 
 class PaymentCubit extends Cubit<PaymentState> {
   PaymentCubit() : super(PaymentInitial());
-  final PaymentRepoImpl paymentRepoImpl = PaymentRepoImpl();
 
   int paymentGetawayIndex = PaymentGetaway.paymob.index;
 
@@ -21,10 +20,9 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(PaymentLoading());
     try {
       if (paymentGetawayIndex == PaymentGetaway.paymob.index) {
-        await paymentRepoImpl.payWithPaymob(
+        await PaymobManager.makePayment(
             context: context, amount: amount, currency: currency);
       } else if (paymentGetawayIndex == PaymentGetaway.paypal.index) {
-        await paymentRepoImpl.payWithPaypal(context: context);
         // pay with paypal
       } else if (paymentGetawayIndex == PaymentGetaway.stripe.index) {
         // pay with stripe

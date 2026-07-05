@@ -1,14 +1,16 @@
 import 'package:dartz/dartz.dart';
+import 'package:payment_project/core/functions/snak_bar.dart';
 import 'package:payment_project/core/networking/api_end_points.dart';
 import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/services_locator.dart';
 import 'package:payment_project/core/utils/constants.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 part 'paymob_manager_interface.dart';
 
 class PaymobManager extends PaymobManagerInterface {
   @override
-  Future<Either<String, String>> getPaymentKey(
+  Future<Either<String, String>> _getPaymentToken(
       {required double amount, required String currency}) async {
     try {
       // -- we have to get three things from the api --
@@ -104,5 +106,18 @@ class PaymobManager extends PaymobManagerInterface {
     });
 
     return response[ApiKey.token];
+  }
+
+  static Future<void> makePayment(
+      {required context,
+      required double amount,
+      required String currency}) async {
+    final paymentKey = await PaymobManager()
+        ._getPaymentToken(amount: amount, currency: currency);
+    paymentKey.fold((failure) => showSnackBar(context, failure),
+        (paymentKey) async {
+      await launchUrl(Uri.parse(
+          "https://accept.paymob.com/api/acceptance/iframes/1057330?payment_token=$paymentKey"));
+    });
   }
 }

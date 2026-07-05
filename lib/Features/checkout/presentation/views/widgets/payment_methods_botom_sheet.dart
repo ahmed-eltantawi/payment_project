@@ -50,14 +50,4 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
       ),
     );
   }
-
-  void _pay({context}) async {
-    final paymentKey =
-        await PaymobManager().getPaymentKey(amount: 10, currency: "EGP");
-    paymentKey.fold((failure) => showSnackBar(context, failure),
-        (paymentKey) async {
-      await launchUrl(Uri.parse(
-          "https://accept.paymob.com/api/acceptance/iframes/1057330?payment_token=$paymentKey"));
-    });
-  }
 }

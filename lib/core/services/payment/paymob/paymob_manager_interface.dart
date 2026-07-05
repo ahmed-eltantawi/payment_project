@@ -1,7 +1,7 @@
 part of 'paymob_manager.dart';
 
 abstract class PaymobManagerInterface {
-  Future<Either<String, String>> getPaymentKey(
+  Future<Either<String, String>> _getPaymentToken(
       {required double amount, required String currency});
 
   Future<String> _getAuthenticationToken();
