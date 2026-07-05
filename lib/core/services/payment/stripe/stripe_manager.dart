@@ -16,4 +16,14 @@ class StripeManager extends StripeManagerInterface {
         headers: {'Authorization': "Bearer ${Constants.stripeSecretKey}"});
     return PaymentIntentModel.fromJson(response);
   }
+
+  @override
+  Future<void> initPaymentSheet(
+      {required String paymentIntentClientSecret,
+      required String merchantDisplayName}) async {
+    await Stripe.instance.initPaymentSheet(
+        paymentSheetParameters: SetupPaymentSheetParameters(
+            paymentIntentClientSecret: paymentIntentClientSecret,
+            merchantDisplayName: merchantDisplayName));
+  }
 }
