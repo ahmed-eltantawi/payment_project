@@ -1,6 +1,5 @@
 import 'package:payment_project/Features/checkout/presentation/views/my_cart_view.dart';
 import 'package:flutter/material.dart';
-
 import 'core/services/services_locator.dart';
 
 void main() async {
