@@ -1,6 +1,6 @@
 part of 'paymob_manager.dart';
 
-abstract class Payment {
+abstract class PaymobManagerInterface {
   Future<Either<String, String>> getPaymentKey(
       {required double amount, required String currency});
 

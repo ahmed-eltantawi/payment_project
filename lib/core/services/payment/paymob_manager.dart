@@ -4,9 +4,9 @@ import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/services_locator.dart';
 import 'package:payment_project/core/utils/constants.dart';
 
-part 'payment.dart';
+part 'paymob_manager_interface.dart';
 
-class PaymobManager extends Payment {
+class PaymobManager extends PaymobManagerInterface {
   @override
   Future<Either<String, String>> getPaymentKey(
       {required double amount, required String currency}) async {
