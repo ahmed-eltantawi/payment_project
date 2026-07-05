@@ -21,6 +21,6 @@ class PaymentCubit extends Cubit<PaymentState> {
       currency: currency,
     );
     result.fold((failure) => emit(PaymentError(error: failure)),
-        (r) => emit(PaymentSuccess()));
+        (r) => emit(PaymentLoadingDone()));
   }
 }

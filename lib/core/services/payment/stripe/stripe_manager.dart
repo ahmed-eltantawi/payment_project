@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/payment/payment_interface.dart';
@@ -22,7 +23,7 @@ class StripeManager extends StripeManagerInterface {
       "currency": currency
     }, headers: {
       'Authorization': "Bearer ${Constants.stripeSecretKey}",
-      "Content-Type": "application/x-www-form-urlencoded"
+      Headers.contentTypeHeader: Headers.formUrlEncodedContentType
     });
     log("create Payment Intent ends");
     return PaymentIntentModel.fromJson(response);
