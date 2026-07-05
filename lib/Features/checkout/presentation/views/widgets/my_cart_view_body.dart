@@ -1,6 +1,5 @@
 import 'package:payment_project/Features/checkout/presentation/views/widgets/cart_info_item.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_botom_sheet.dart';
-import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/total_price_widget.dart';
 import 'package:payment_project/core/widgets/custom_button.dart';
 import 'package:flutter/material.dart';

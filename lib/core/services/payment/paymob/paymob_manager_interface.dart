@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 part of 'paymob_manager.dart';
 
 abstract class PaymobManagerInterface extends PaymentInterface {

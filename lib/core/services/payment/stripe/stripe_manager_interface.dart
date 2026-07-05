@@ -1,3 +1,5 @@
+// ignore_for_file: unused_element
+
 part of "stripe_manager.dart";
 
 abstract class StripeManagerInterface extends PaymentInterface {
