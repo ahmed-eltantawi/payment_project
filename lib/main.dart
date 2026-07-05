@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'core/services/services_locator.dart';
 
 void main() async {
-  // main
   await setupServiceLocator();
   runApp(const CheckoutApp());
 }
