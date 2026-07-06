@@ -18,15 +18,15 @@ class PaymobManager extends PaymobManagerInterface {
       // -- we have to get three things from the api --
 
       //* -- 1- Authentication Token --
-      String authenticationToken = await _getAuthenticationToken();
+      final String authenticationToken = await _getAuthenticationToken();
       //* -- 2- Order Id --
-      int orderId = await _getOrderId(
+      final int orderId = await _getOrderId(
           amount: (amount * 100)
               .toString(), // we multiply by 100 to get amount in cents
           currency: currency,
           authenticationToken: authenticationToken);
       //* -- 3- Payment Key --
-      String paymentKey = await _getPaymentKey(
+      final String paymentKey = await _getPaymentKey(
           authenticationToken: authenticationToken,
           orderId: orderId.toString(),
           amount: (amount * 100)
@@ -77,7 +77,7 @@ class PaymobManager extends PaymobManagerInterface {
     final response = await getIt
         .get<DioConsumer>()
         .post("${_baseUrl}acceptance/payment_keys", data: {
-      // ALL OF THEM ARE REQIERD
+      // ALL OF THEM ARE REQUIRED
       "expiration": 3600,
 
       "auth_token": authenticationToken, //From First Api

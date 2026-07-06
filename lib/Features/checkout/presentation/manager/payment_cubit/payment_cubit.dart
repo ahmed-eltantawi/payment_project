@@ -1,5 +1,4 @@
-import 'package:bloc/bloc.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_methods_list_view.dart';
 import 'package:payment_project/core/services/payment/paymob/paymob_manager.dart';
 

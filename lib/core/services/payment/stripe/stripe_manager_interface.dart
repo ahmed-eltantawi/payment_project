@@ -14,5 +14,6 @@ abstract class StripeManagerInterface extends PaymentInterface {
 
   Future<CustomerSessionModel> _getEphemeralKey();
 
+  // ignore: unused_element_parameter
   Future<String> _createCustomer({String? email, String? name, String? phone});
 }
