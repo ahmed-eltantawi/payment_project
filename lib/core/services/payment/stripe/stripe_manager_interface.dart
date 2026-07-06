@@ -11,4 +11,8 @@ abstract class StripeManagerInterface extends PaymentInterface {
       required String merchantDisplayName});
 
   Future<void> _displayPaymentSheet();
+
+  Future<CustomerSessionModel> _getEphemeralKey();
+
+  Future<String> _createCustomer({String? email, String? name, String? phone});
 }
