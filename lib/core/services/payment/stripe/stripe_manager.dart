@@ -15,24 +15,28 @@ part "stripe_manager_interface.dart";
 
 class StripeManager extends StripeManagerInterface {
   static const String _baseUrl = "https://api.stripe.com/v1/";
+  static const String _stripeVersion = "2026-06-24.dahlia";
+  final headers = {
+    'Authorization': "Bearer ${Constants.stripeSecretKey}",
+    'Stripe-Version': _stripeVersion,
+    Headers.contentTypeHeader: Headers.formUrlEncodedContentType
+  };
   @override
   Future<PaymentIntentModel> _createPaymentIntent({
     required double amount,
     required String currency,
   }) async {
     log("create Payment Intent starts");
-    final response = await getIt
-        .get<DioConsumer>()
-        .post("${_baseUrl}payment_intents", data: {
-      "amount": (amount * 100).toInt(),
-      "currency": currency,
-      "customer": await getIt
-          .get<CacheHelper>()
-          .getSecureData(key: CacheKeys.customerId),
-    }, headers: {
-      'Authorization': "Bearer ${Constants.stripeSecretKey}",
-      Headers.contentTypeHeader: Headers.formUrlEncodedContentType
-    });
+    final response =
+        await getIt.get<DioConsumer>().post("${_baseUrl}payment_intents",
+            data: {
+              "amount": (amount * 100).toInt(),
+              "currency": currency,
+              "customer": await getIt
+                  .get<CacheHelper>()
+                  .getSecureData(key: CacheKeys.customerId),
+            },
+            headers: headers);
     log("create Payment Intent ends");
     return PaymentIntentModel.fromJson(response);
   }
@@ -65,6 +69,7 @@ class StripeManager extends StripeManagerInterface {
     required String currency,
   }) async {
     try {
+      await _getEphemeralKey();
       final paymentIntentModel =
           await _createPaymentIntent(amount: amount, currency: currency);
       await _initPaymentSheet(
@@ -79,20 +84,26 @@ class StripeManager extends StripeManagerInterface {
 
   /// Get Customer Id from Stripe API
   /// Use it in Sing up, and log in and save it in Secure Storage
-  Future<void> createCustomerId(
+  Future<String> _createCustomerId(
       {String? email, String? name, String? phone}) async {
-    final response =
-        await getIt.get<DioConsumer>().post("${_baseUrl}customers", data: {
-      "email": email,
-      "name": name,
-      "phone": phone
-    }, headers: {
-      'Authorization': "Bearer ${Constants.stripeSecretKey}",
-      Headers.contentTypeHeader: Headers.formUrlEncodedContentType
-    });
+    final response = await getIt.get<DioConsumer>().post("${_baseUrl}customers",
+        data: {"email": email, "name": name, "phone": phone}, headers: headers);
     final String id = response["id"];
     await getIt
         .get<CacheHelper>()
         .saveSecureData(key: CacheKeys.customerId, value: id);
+    return id;
+  }
+
+  Future<String> _getEphemeralKey() async {
+    final String customerId = await _createCustomerId();
+
+    final response =
+        await getIt.get<DioConsumer>().post("${_baseUrl}ephemeral_keys",
+            data: {
+              "customer": customerId,
+            },
+            headers: headers);
+    return response["secret"];
   }
 }
