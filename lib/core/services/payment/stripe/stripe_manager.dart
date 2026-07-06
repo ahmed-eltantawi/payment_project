@@ -17,7 +17,8 @@ part "stripe_manager_interface.dart";
 class StripeManager extends StripeManagerInterface {
   static const String _baseUrl = "https://api.stripe.com/v1/";
   static const String _stripeVersion = "2026-06-24.dahlia";
-  final headers = {
+  static final DioConsumer _dioConsumer = getIt.get<DioConsumer>();
+  final Map<String, String> headers = {
     'Authorization': "Bearer ${Constants.stripeSecretKey}",
     'Stripe-Version': _stripeVersion,
     Headers.contentTypeHeader: Headers.formUrlEncodedContentType
@@ -28,16 +29,15 @@ class StripeManager extends StripeManagerInterface {
     required String currency,
   }) async {
     log("create Payment Intent starts");
-    final response =
-        await getIt.get<DioConsumer>().post("${_baseUrl}payment_intents",
-            data: {
-              "amount": (amount * 100).toInt(),
-              "currency": currency,
-              "customer": await getIt
-                  .get<CacheHelper>()
-                  .getSecureData(key: CacheKeys.customerId),
-            },
-            headers: headers);
+    final response = await _dioConsumer.post("${_baseUrl}payment_intents",
+        data: {
+          "amount": (amount * 100).round(),
+          "currency": currency,
+          "customer": await getIt
+              .get<CacheHelper>()
+              .getSecureData(key: CacheKeys.customerId),
+        },
+        headers: headers);
     log("create Payment Intent ends");
     return PaymentIntentModel.fromJson(response);
   }
@@ -69,7 +69,7 @@ class StripeManager extends StripeManagerInterface {
   /// Use it in Sing up, and log in and save it in Secure Storage
   Future<String> _createCustomer(
       {String? email, String? name, String? phone}) async {
-    final response = await getIt.get<DioConsumer>().post("${_baseUrl}customers",
+    final response = await _dioConsumer.post("${_baseUrl}customers",
         data: {"email": email, "name": name, "phone": phone}, headers: headers);
     final String id = response["id"];
     await getIt
@@ -79,14 +79,15 @@ class StripeManager extends StripeManagerInterface {
   }
 
   Future<CustomerSessionModel> _getEphemeralKey() async {
-    final String customerId = await _createCustomer();
+    String? customerId =
+        await getIt.get<CacheHelper>().getSecureData(key: CacheKeys.customerId);
+    customerId ??= await _createCustomer();
 
-    final response =
-        await getIt.get<DioConsumer>().post("${_baseUrl}ephemeral_keys",
-            data: {
-              "customer": customerId,
-            },
-            headers: headers);
+    final response = await _dioConsumer.post("${_baseUrl}ephemeral_keys",
+        data: {
+          "customer": customerId,
+        },
+        headers: headers);
     return CustomerSessionModel(
         customerEphemeralKeySecret: response["secret"], customerId: customerId);
   }
