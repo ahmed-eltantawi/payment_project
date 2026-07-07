@@ -15,7 +15,11 @@ class PaymobManager implements PaymobInterface {
       final clientSecret = await _getClientSecret(
           amount: amount * 100,
           currency: currency,
-          paymentMethodsIds: [Constants.paymobOnlineCardId]);
+          paymentMethodsIds: [
+            // Constants.paymobOnlineCardId,
+            Constants.paymobMobileWalletId
+          ]);
+
       final launchResult =
           await _launchThePaymentSDK(clientSecret: clientSecret);
       if (launchResult != null) {
@@ -32,25 +36,29 @@ class PaymobManager implements PaymobInterface {
       {required double amount,
       required String currency,
       required List<int> paymentMethodsIds}) async {
-    final response = await _dioConsumer.post(
-      "${_baseUrl}v1/intention/",
-      data: {
-        "amount": amount,
-        "currency": currency,
-        "payment_methods": paymentMethodsIds,
-        "billing_data": {
-          "first_name": "Ahmed",
-          "last_name": "Hamed",
-          "phone_number": "+201020101740"
+    try {
+      final response = await _dioConsumer.post(
+        "${_baseUrl}v1/intention/",
+        data: {
+          "amount": amount,
+          "currency": currency,
+          "payment_methods": paymentMethodsIds,
+          "billing_data": {
+            "first_name": "Ahmed",
+            "last_name": "Hamed",
+            "phone_number": "+201020101740"
+          },
         },
-      },
-      headers: {
-        "Authorization": "Token ${Constants.paymobSecretKey}",
-      },
-    );
+        headers: {
+          "Authorization": "Token ${Constants.paymobSecretKey}",
+        },
+      );
 
-    final paymobResponse = PaymobIntentionModel.fromJson(response);
-    return paymobResponse.clientSecret!;
+      final paymobResponse = PaymobIntentionModel.fromJson(response);
+      return paymobResponse.clientSecret!;
+    } on Exception catch (e) {
+      throw e.toString();
+    }
   }
 
   @override
