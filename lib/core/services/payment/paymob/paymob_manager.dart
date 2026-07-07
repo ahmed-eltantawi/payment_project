@@ -11,8 +11,17 @@ class PaymobManager implements PaymobInterface {
     required context,
     required double amount,
     required String currency,
-  }) {
-    throw UnimplementedError();
+  }) async {
+    try {
+      final clientSecret = await _getClientSecret(
+          amount: amount, currency: currency, paymentMethodsIds: []);
+
+      await _launchThePaymentSDK(clientSecret: clientSecret);
+
+      return right(null);
+    } on Exception catch (e) {
+      return left(e.toString());
+    }
   }
 
   @override
@@ -53,7 +62,8 @@ class PaymobManager implements PaymobInterface {
   }
 
   @override
-  Future<void> _launchThePaymentSDK({required String clientSecret}) async {
+  Future<Either<String, void>> _launchThePaymentSDK(
+      {required String clientSecret}) async {
     final result = await _service.payWithPaymob(
       publicKey: Constants.paymobPublicKey,
       clientSecret: clientSecret,
@@ -67,11 +77,11 @@ class PaymobManager implements PaymobInterface {
     );
 
     if (result.isSuccessful) {
-      // Payment succeeded
+      return right(null);
     } else if (result.isFailure) {
-      // Payment failed
-    } else if (result.isPending) {
-      // Payment is pending
+      return left(result.errorMessage ?? "Something went wrong");
     }
+
+    return left("Something went wrong");
   }
 }

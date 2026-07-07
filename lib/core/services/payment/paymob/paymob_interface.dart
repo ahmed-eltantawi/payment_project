@@ -8,7 +8,7 @@ import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/payment/payment_interface.dart';
 import 'package:payment_project/core/services/services_locator.dart';
 import 'package:payment_project/core/utils/constants.dart';
-part "paymob_manger.dart";
+part "paymob_manager.dart";
 
 abstract class PaymobInterface extends PaymentInterface {
   @override
@@ -25,7 +25,7 @@ abstract class PaymobInterface extends PaymentInterface {
 
   Future<String> _getAuthenticationToken();
 
-  Future<void> _launchThePaymentSDK({
+  Future<Either<String, void>> _launchThePaymentSDK({
     required String clientSecret,
   });
 }

@@ -3,7 +3,7 @@ import 'package:payment_project/Features/checkout/presentation/manager/payment_c
 import 'package:payment_project/Features/checkout/presentation/views/widgets/payment_method_item.dart';
 import 'package:flutter/material.dart';
 import 'package:payment_project/core/services/payment/payment_interface.dart';
-import 'package:payment_project/core/services/payment/paymob/paymob_manager.dart';
+import 'package:payment_project/core/services/payment/paymob/paymob_interface.dart';
 import 'package:payment_project/core/services/payment/paypal/paypal_manger.dart';
 import 'package:payment_project/core/services/payment/stripe/stripe_manager.dart';
 
