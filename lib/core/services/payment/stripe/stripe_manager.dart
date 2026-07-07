@@ -48,7 +48,7 @@ class StripeManager extends StripeManagerInterface {
           "currency": currency,
           "customer": await getIt
               .get<CacheHelper>()
-              .getSecureData(key: CacheKeys.customerId),
+              .getSecureData(key: CacheKeys.stripeCustomerId),
         },
         headers: headers);
     log("create Payment Intent ends");
@@ -100,7 +100,7 @@ class StripeManager extends StripeManagerInterface {
     final String id = response["id"];
     await getIt
         .get<CacheHelper>()
-        .saveSecureData(key: CacheKeys.customerId, value: id);
+        .saveSecureData(key: CacheKeys.stripeCustomerId, value: id);
     return id;
   }
 
@@ -110,8 +110,9 @@ class StripeManager extends StripeManagerInterface {
   /// is created before requesting the Ephemeral Key.
   @override
   Future<CustomerSessionModel> _getEphemeralKey() async {
-    String? customerId =
-        await getIt.get<CacheHelper>().getSecureData(key: CacheKeys.customerId);
+    String? customerId = await getIt
+        .get<CacheHelper>()
+        .getSecureData(key: CacheKeys.stripeCustomerId);
     customerId ??= await _createCustomer();
 
     final response = await _dioConsumer.post("${_baseUrl}ephemeral_keys",

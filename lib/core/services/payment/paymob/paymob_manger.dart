@@ -4,7 +4,7 @@ class PaymobManager implements PaymobInterface {
   static const String _baseUrl = "https://accept.paymob.com/";
   static final DioConsumer _dioConsumer = getIt.get<DioConsumer>();
 
-  final service = PaymobService();
+  final _service = PaymobService();
 
   @override
   Future<Either<String, void>> makePayment({
@@ -29,21 +29,49 @@ class PaymobManager implements PaymobInterface {
       {required double amount,
       required String currency,
       required List<int> paymentMethodsIds}) async {
-    final response = await _dioConsumer.post(
-      "${_baseUrl}v1/intention/",
-      data: {
-        "amount": amount,
-        "currency": currency,
-        "payment_methods": paymentMethodsIds
-      },
-      headers: {"Authorization": "Token ${Constants.paymobSecretKey}"},
-    );
-    return response["client_secret"];
+    String? clientSecret = await getIt
+        .get<CacheHelper>()
+        .getSecureData(key: CacheKeys.paymobClientId);
+    if (clientSecret != null) {
+      return clientSecret;
+    } else {
+      final response = await _dioConsumer.post(
+        "${_baseUrl}v1/intention/",
+        data: {
+          "amount": amount,
+          "currency": currency,
+          "payment_methods": paymentMethodsIds
+        },
+        headers: {"Authorization": "Token ${Constants.paymobSecretKey}"},
+      );
+      clientSecret = response["client_secret"];
+      getIt
+          .get<CacheHelper>()
+          .saveSecureData(key: CacheKeys.paymobClientId, value: clientSecret!);
+      return clientSecret;
+    }
   }
 
   @override
-  Future<void> _launchThePaymentSDK({required String clientSecret}) {
-    // TODO: implement _launchThePaymentSDK
-    throw UnimplementedError();
+  Future<void> _launchThePaymentSDK({required String clientSecret}) async {
+    final result = await _service.payWithPaymob(
+      publicKey: Constants.paymobPublicKey,
+      clientSecret: clientSecret,
+      customization: const PaymobCustomization(
+        appName: 'My Store',
+        // buttonBackgroundColor: Colors.blue,
+        // buttonTextColor: Colors.white,
+        showSaveCard: true,
+        saveCardDefault: false,
+      ),
+    );
+
+    if (result.isSuccessful) {
+      // Payment succeeded
+    } else if (result.isFailure) {
+      // Payment failed
+    } else if (result.isPending) {
+      // Payment is pending
+    }
   }
 }
