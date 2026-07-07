@@ -131,7 +131,6 @@ class StripeManager extends StripeManagerInterface {
   /// - Right(null) if the payment succeeds.
   /// - Left(errorMessage) if an error occurs.
   Future<Either<String, void>> makePayment({
-    required context,
     required double amount,
     required String currency,
   }) async {

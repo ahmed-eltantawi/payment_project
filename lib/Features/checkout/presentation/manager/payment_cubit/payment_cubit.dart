@@ -15,7 +15,6 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(PaymentLoading());
 
     final result = await paymentGetaways[paymentGetawayIndex].makePayment(
-      context: context,
       amount: amount,
       currency: currency,
     );
@@ -26,5 +25,3 @@ class PaymentCubit extends Cubit<PaymentState> {
     });
   }
 }
-
-class ahmed {}

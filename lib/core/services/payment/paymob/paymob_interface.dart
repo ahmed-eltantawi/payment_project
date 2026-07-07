@@ -11,7 +11,6 @@ part "paymob_manager.dart";
 abstract class PaymobInterface extends PaymentInterface {
   @override
   Future<Either<String, void>> makePayment({
-    required context,
     required double amount,
     required String currency,
   });

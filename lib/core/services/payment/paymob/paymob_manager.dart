@@ -8,7 +8,6 @@ class PaymobManager implements PaymobInterface {
 
   @override
   Future<Either<String, void>> makePayment({
-    required context,
     required double amount,
     required String currency,
   }) async {
