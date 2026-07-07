@@ -33,7 +33,7 @@ class PaymobManager implements PaymobInterface {
       {required double amount,
       required String currency,
       required List<int> paymentMethodsIds}) async {
-    final PaymobIntentionModel response = await _dioConsumer.post(
+    final response = await _dioConsumer.post(
       "${_baseUrl}v1/intention/",
       data: {
         "amount": amount,
@@ -45,10 +45,13 @@ class PaymobManager implements PaymobInterface {
           "phone_number": "+201020101740"
         },
       },
-      headers: {"Authorization": "Token ${Constants.paymobSecretKey}"},
+      headers: {
+        "Authorization": "Token ${Constants.paymobSecretKey}",
+      },
     );
 
-    return response["client_secret"];
+    final paymobResponse = PaymobIntentionModel.fromJson(response);
+    return paymobResponse.clientSecret!;
   }
 
   @override
