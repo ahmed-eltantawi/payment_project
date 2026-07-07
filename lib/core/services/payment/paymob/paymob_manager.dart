@@ -33,7 +33,7 @@ class PaymobManager implements PaymobInterface {
       {required double amount,
       required String currency,
       required List<int> paymentMethodsIds}) async {
-    final response = await _dioConsumer.post(
+    final PaymobIntentionModel response = await _dioConsumer.post(
       "${_baseUrl}v1/intention/",
       data: {
         "amount": amount,
