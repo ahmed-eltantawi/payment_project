@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -41,7 +39,6 @@ class StripeManager extends StripeManagerInterface {
     required double amount,
     required String currency,
   }) async {
-    log("create Payment Intent starts");
     final response = await _dioConsumer.post("${_baseUrl}payment_intents",
         data: {
           "amount": (amount * 100).round(),
@@ -51,7 +48,6 @@ class StripeManager extends StripeManagerInterface {
               .getSecureData(key: CacheKeys.stripeCustomerId),
         },
         headers: headers);
-    log("create Payment Intent ends");
     return PaymentIntentModel.fromJson(response);
   }
 
@@ -65,7 +61,6 @@ class StripeManager extends StripeManagerInterface {
       {required String paymentIntentClientSecret,
       required String merchantDisplayName,
       CustomerSessionModel? customerSessionModel}) async {
-    log("init payment sheet starts");
     await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
             paymentIntentClientSecret: paymentIntentClientSecret,
@@ -73,7 +68,6 @@ class StripeManager extends StripeManagerInterface {
             customerId: customerSessionModel?.customerId,
             customerEphemeralKeySecret:
                 customerSessionModel?.customerEphemeralKeySecret));
-    log("init payment sheet ends");
   }
 
   @override
@@ -83,9 +77,7 @@ class StripeManager extends StripeManagerInterface {
   /// Throws a [StripeException] if the payment fails
   /// or the user cancels the payment.
   Future<void> _displayPaymentSheet() async {
-    log("display payment sheet starts");
     await Stripe.instance.presentPaymentSheet();
-    log("display payment sheet ends");
   }
 
   ///! Creates a new Stripe Customer.

@@ -14,10 +14,14 @@ class PaymobManager implements PaymobInterface {
   }) async {
     try {
       final clientSecret = await _getClientSecret(
-          amount: amount, currency: currency, paymentMethodsIds: []);
-
-      await _launchThePaymentSDK(clientSecret: clientSecret);
-
+          amount: amount * 100,
+          currency: currency,
+          paymentMethodsIds: [Constants.paymobOnlineCardId]);
+      final launchResult =
+          await _launchThePaymentSDK(clientSecret: clientSecret);
+      if (launchResult != null) {
+        return left(launchResult);
+      }
       return right(null);
     } on Exception catch (e) {
       return left(e.toString());
@@ -25,45 +29,30 @@ class PaymobManager implements PaymobInterface {
   }
 
   @override
-  Future<String> _getAuthenticationToken() async {
-    final response = await _dioConsumer.post(
-      "${_baseUrl}api/auth/tokens",
-      data: {"api_key": Constants.paymobApiKey},
-    );
-    return response["token"];
-  }
-
-  @override
   Future<String> _getClientSecret(
       {required double amount,
       required String currency,
       required List<int> paymentMethodsIds}) async {
-    String? clientSecret = await getIt
-        .get<CacheHelper>()
-        .getSecureData(key: CacheKeys.paymobClientId);
-    if (clientSecret != null) {
-      return clientSecret;
-    } else {
-      final response = await _dioConsumer.post(
-        "${_baseUrl}v1/intention/",
-        data: {
-          "amount": amount,
-          "currency": currency,
-          "payment_methods": paymentMethodsIds
+    final response = await _dioConsumer.post(
+      "${_baseUrl}v1/intention/",
+      data: {
+        "amount": amount,
+        "currency": currency,
+        "payment_methods": paymentMethodsIds,
+        "billing_data": {
+          "first_name": "Ahmed",
+          "last_name": "Hamed",
+          "phone_number": "+201020101740"
         },
-        headers: {"Authorization": "Token ${Constants.paymobSecretKey}"},
-      );
-      clientSecret = response["client_secret"];
-      getIt
-          .get<CacheHelper>()
-          .saveSecureData(key: CacheKeys.paymobClientId, value: clientSecret!);
-      return clientSecret;
-    }
+      },
+      headers: {"Authorization": "Token ${Constants.paymobSecretKey}"},
+    );
+
+    return response["client_secret"];
   }
 
   @override
-  Future<Either<String, void>> _launchThePaymentSDK(
-      {required String clientSecret}) async {
+  Future<String?> _launchThePaymentSDK({required String clientSecret}) async {
     final result = await _service.payWithPaymob(
       publicKey: Constants.paymobPublicKey,
       clientSecret: clientSecret,
@@ -77,11 +66,9 @@ class PaymobManager implements PaymobInterface {
     );
 
     if (result.isSuccessful) {
-      return right(null);
-    } else if (result.isFailure) {
-      return left(result.errorMessage ?? "Something went wrong");
+      return null;
+    } else {
+      return result.errorMessage ?? "Something went wrong";
     }
-
-    return left("Something went wrong");
   }
 }

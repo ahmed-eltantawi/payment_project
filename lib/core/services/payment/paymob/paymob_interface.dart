@@ -1,9 +1,6 @@
 // ignore_for_file: unused_element
-
 import 'package:dartz/dartz.dart';
 import 'package:flutter_paymob_sdk/flutter_paymob_sdk.dart';
-import 'package:payment_project/core/cache/cache_helper.dart';
-import 'package:payment_project/core/cache/cache_keys.dart';
 import 'package:payment_project/core/networking/dio_consumer.dart';
 import 'package:payment_project/core/services/payment/payment_interface.dart';
 import 'package:payment_project/core/services/services_locator.dart';
@@ -23,9 +20,7 @@ abstract class PaymobInterface extends PaymentInterface {
       required String currency,
       required List<int> paymentMethodsIds});
 
-  Future<String> _getAuthenticationToken();
-
-  Future<Either<String, void>> _launchThePaymentSDK({
+  Future<String?> _launchThePaymentSDK({
     required String clientSecret,
   });
 }
