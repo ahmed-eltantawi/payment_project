@@ -4,6 +4,8 @@ class PaymobManager implements PaymobInterface {
   static const String _baseUrl = "https://accept.paymob.com/";
   static final DioConsumer _dioConsumer = getIt.get<DioConsumer>();
 
+  final service = PaymobService();
+
   @override
   Future<Either<String, void>> makePayment({
     required context,
@@ -29,10 +31,14 @@ class PaymobManager implements PaymobInterface {
       required List<int> paymentMethodsIds}) async {
     final response = await _dioConsumer.post(
       "${_baseUrl}v1/intention/",
-      data: {"api_key": Constants.paymobApiKey},
-      headers: {"Authorization": "Token ${Constants.}"},
+      data: {
+        "amount": amount,
+        "currency": currency,
+        "payment_methods": paymentMethodsIds
+      },
+      headers: {"Authorization": "Token ${Constants.paymobSecretKey}"},
     );
-    return response["token"];
+    return response["client_secret"];
   }
 
   @override
