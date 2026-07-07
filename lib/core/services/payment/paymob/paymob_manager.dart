@@ -117,8 +117,8 @@ class PaymobManager extends PaymobManagerInterface {
       required double amount,
       required String currency}) async {
     try {
-      final paymentKey = await PaymobManager()
-          ._getPaymentToken(amount: amount, currency: currency);
+      final paymentKey =
+          await _getPaymentToken(amount: amount, currency: currency);
       paymentKey.fold((failure) => showSnackBar(context, failure),
           (paymentKey) async {
         await launchUrl(Uri.parse(
