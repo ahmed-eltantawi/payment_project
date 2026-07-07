@@ -12,5 +12,3 @@ final class PaymentError extends PaymentState {
 }
 
 final class PaymentSuccess extends PaymentState {}
-
-final class PaymentLoadingDone extends PaymentState {}

@@ -6,6 +6,9 @@ plugins {
 }
 
 android {
+        buildFeatures {
+        dataBinding = true
+    }
     namespace = "com.example.payment_project"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion

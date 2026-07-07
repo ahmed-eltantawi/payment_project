@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
@@ -41,17 +39,15 @@ class StripeManager extends StripeManagerInterface {
     required double amount,
     required String currency,
   }) async {
-    log("create Payment Intent starts");
     final response = await _dioConsumer.post("${_baseUrl}payment_intents",
         data: {
           "amount": (amount * 100).round(),
           "currency": currency,
           "customer": await getIt
               .get<CacheHelper>()
-              .getSecureData(key: CacheKeys.customerId),
+              .getSecureData(key: CacheKeys.stripeCustomerId),
         },
         headers: headers);
-    log("create Payment Intent ends");
     return PaymentIntentModel.fromJson(response);
   }
 
@@ -65,7 +61,6 @@ class StripeManager extends StripeManagerInterface {
       {required String paymentIntentClientSecret,
       required String merchantDisplayName,
       CustomerSessionModel? customerSessionModel}) async {
-    log("init payment sheet starts");
     await Stripe.instance.initPaymentSheet(
         paymentSheetParameters: SetupPaymentSheetParameters(
             paymentIntentClientSecret: paymentIntentClientSecret,
@@ -73,7 +68,6 @@ class StripeManager extends StripeManagerInterface {
             customerId: customerSessionModel?.customerId,
             customerEphemeralKeySecret:
                 customerSessionModel?.customerEphemeralKeySecret));
-    log("init payment sheet ends");
   }
 
   @override
@@ -83,9 +77,7 @@ class StripeManager extends StripeManagerInterface {
   /// Throws a [StripeException] if the payment fails
   /// or the user cancels the payment.
   Future<void> _displayPaymentSheet() async {
-    log("display payment sheet starts");
     await Stripe.instance.presentPaymentSheet();
-    log("display payment sheet ends");
   }
 
   ///! Creates a new Stripe Customer.
@@ -100,7 +92,7 @@ class StripeManager extends StripeManagerInterface {
     final String id = response["id"];
     await getIt
         .get<CacheHelper>()
-        .saveSecureData(key: CacheKeys.customerId, value: id);
+        .saveSecureData(key: CacheKeys.stripeCustomerId, value: id);
     return id;
   }
 
@@ -110,8 +102,9 @@ class StripeManager extends StripeManagerInterface {
   /// is created before requesting the Ephemeral Key.
   @override
   Future<CustomerSessionModel> _getEphemeralKey() async {
-    String? customerId =
-        await getIt.get<CacheHelper>().getSecureData(key: CacheKeys.customerId);
+    String? customerId = await getIt
+        .get<CacheHelper>()
+        .getSecureData(key: CacheKeys.stripeCustomerId);
     customerId ??= await _createCustomer();
 
     final response = await _dioConsumer.post("${_baseUrl}ephemeral_keys",

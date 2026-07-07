@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:payment_project/Features/checkout/presentation/manager/payment_cubit/payment_cubit.dart';
@@ -38,7 +36,6 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
               },
               builder: (context, state) {
                 if (state is PaymentLoading) {
-                  log("loading");
                   return const CustomButton(
                     isLoading: true,
                     text: '',
@@ -47,7 +44,6 @@ class PaymentMethodsBottomSheet extends StatelessWidget {
                   return CustomButton(
                       text: 'Continue',
                       onTap: () {
-                        log("pressed");
                         context.read<PaymentCubit>().pay(
                             context: context, amount: 100, currency: "EGP");
                       });
